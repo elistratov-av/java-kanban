@@ -24,7 +24,7 @@ public class Subtask extends Task {
     public String toString() {
         String description = getDescription();
         return "tasks.Subtask{" +
-                "id=" + id +
+                "id=" + getId() +
                 ", name='" + getName() + '\'' +
                 ", description.length='" + (description == null ? 0 : description.length()) + '\'' +
                 ", status=" + status +
