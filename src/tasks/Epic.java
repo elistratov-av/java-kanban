@@ -16,6 +16,7 @@ public class Epic extends Task {
 
     public Epic(Epic task) {
         super(task);
+        subtaskIds.addAll(task.subtaskIds);
     }
 
     @Override
