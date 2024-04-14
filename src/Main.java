@@ -6,15 +6,15 @@ public class Main {
 
     public static void main(String[] args) {
         TaskManager taskManager = Managers.getDefault();
-        int task1Id = taskManager.create(new Task("Task1", "tasks.Task 1 description")).getId();
-        int task2Id = taskManager.create(new Task("Task2", "tasks.Task 2 description")).getId();
-        Epic epic = taskManager.create(new Epic("Epic1", "tasks.Epic 1 description"));
+        int task1Id = taskManager.create(new Task("Task1")).getId();
+        int task2Id = taskManager.create(new Task("Task2")).getId();
+        Epic epic = taskManager.create(new Epic("Epic1"));
         int epic1Id = epic.getId();
-        int subtask1Id = taskManager.create(new Subtask("Subtask1", "tasks.Subtask 1 description", epic)).getId();
-        int subtask2Id = taskManager.create(new Subtask("Subtask2", "tasks.Subtask 2 description", epic)).getId();
-        epic = taskManager.create(new Epic("Epic2", "tasks.Epic 2 description"));
+        int subtask1Id = taskManager.create(new Subtask("Subtask1", epic)).getId();
+        int subtask2Id = taskManager.create(new Subtask("Subtask2", epic)).getId();
+        epic = taskManager.create(new Epic("Epic2"));
         int epic2Id = epic.getId();
-        int subtask3Id = taskManager.create(new Subtask("Subtask3", "tasks.Subtask 3 description", epic)).getId();
+        int subtask3Id = taskManager.create(new Subtask("Subtask3", epic)).getId();
 
         System.out.println("Старт тестов!!!");
         printAllTasks(taskManager);
