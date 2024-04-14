@@ -1,12 +1,6 @@
 package tasks;
 
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
-
 public class Epic extends Task {
-    protected final HashSet<Integer> subtaskIds = new HashSet<>();
-
     public Epic() {
     }
 
@@ -16,15 +10,10 @@ public class Epic extends Task {
 
     public Epic(Epic task) {
         super(task);
-        subtaskIds.addAll(task.subtaskIds);
     }
 
     @Override
     public void setStatus(TaskStatus status) {
-    }
-
-    public Set<Integer> getSubtaskIds() {
-        return Collections.unmodifiableSet(subtaskIds);
     }
 
     @Override
@@ -35,7 +24,6 @@ public class Epic extends Task {
                 ", name='" + getName() + '\'' +
                 ", description.length='" + (description == null ? 0 : description.length()) + '\'' +
                 ", status=" + status +
-                ", subtaskIds=" + subtaskIds +
                 '}';
     }
 }

@@ -1,23 +1,27 @@
 package tasks;
 
 public class Subtask extends Task {
-    protected int epicId;
+    protected Epic epic;
 
     public Subtask() {
     }
 
-    public Subtask(String name, String description, int epicId) {
+    public Subtask(String name, String description, Epic epic) {
         super(name, description);
-        this.epicId = epicId;
+        this.epic = epic;
     }
 
     public Subtask(Subtask task) {
         super(task);
-        this.epicId = task.epicId;
+        this.epic = task.epic;
     }
 
-    public int getEpicId() {
-        return epicId;
+    public Epic getEpic() {
+        return epic;
+    }
+
+    public Integer getEpicId() {
+        return epic != null ? epic.getId() : null;
     }
 
     @Override
@@ -28,7 +32,7 @@ public class Subtask extends Task {
                 ", name='" + getName() + '\'' +
                 ", description.length='" + (description == null ? 0 : description.length()) + '\'' +
                 ", status=" + status +
-                ", epicId=" + epicId +
+                ", epicId=" + getEpicId() +
                 '}';
     }
 }
