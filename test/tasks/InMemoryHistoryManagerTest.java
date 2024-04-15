@@ -10,7 +10,7 @@ class InMemoryHistoryManagerTest {
     private TaskManager taskManager;
 
     @BeforeEach
-    public void beforeAll() {
+    public void beforeEach() {
         taskManager = Managers.getDefault();
     }
 

@@ -1,9 +1,6 @@
 package tasks;
 
 public class Epic extends Task {
-    public Epic() {
-    }
-
     public Epic(String name) {
         super(name);
     }
@@ -14,6 +11,7 @@ public class Epic extends Task {
 
     @Override
     public void setStatus(TaskStatus status) {
+        // Статус эпика расчетная величина, поэтому блокирую его смену через открытый метод
     }
 
     @Override

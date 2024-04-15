@@ -3,9 +3,6 @@ package tasks;
 public class Subtask extends Task {
     protected Epic epic;
 
-    public Subtask() {
-    }
-
     public Subtask(String name, Epic epic) {
         super(name);
         this.epic = epic;

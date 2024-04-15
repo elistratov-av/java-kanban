@@ -1,6 +1,10 @@
 package tasks;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class InMemoryTaskManager implements TaskManager {
     private static int taskCounter = 0;
@@ -11,9 +15,9 @@ public class InMemoryTaskManager implements TaskManager {
 
     private final HistoryManager history = Managers.getDefaultHistory();
 
-    private final HashMap<Integer, Task> tasks = new HashMap<>();
-    private final HashMap<Integer, Subtask> subtasks = new HashMap<>();
-    private final HashMap<Integer, Epic> epics = new HashMap<>();
+    private final Map<Integer, Task> tasks = new HashMap<>();
+    private final Map<Integer, Subtask> subtasks = new HashMap<>();
+    private final Map<Integer, Epic> epics = new HashMap<>();
 
     @Override
     public List<Task> getHistory() {
@@ -34,10 +38,10 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public Task findTask(int id) {
-        Task t = tasks.get(id);
-        if (t != null)
-            history.add(new Task(t));
-        return t;
+        Task task = tasks.get(id);
+        if (task != null)
+            history.add(new Task(task));
+        return task;
     }
 
     @Override
@@ -82,6 +86,10 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public Collection<Subtask> fetchSubtasks() {
+        // Реализация уже использует интерфейс Collection
+        // чтобы не создавать обертку в виде new ArrayList оставляю этот интерфейс
+        // на самом деле его функционал уже чем у List, но вполне достаточно для пользователей
+        // поскольку требуется только перебор полученной коллекции
         return subtasks.values();
     }
 
@@ -93,10 +101,10 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public Subtask findSubtask(int id) {
-        Subtask t = subtasks.get(id);
-        if (t != null)
-            history.add(new Subtask(t));
-        return t;
+        Subtask task = subtasks.get(id);
+        if (task != null)
+            history.add(new Subtask(task));
+        return task;
     }
 
     @Override
@@ -119,14 +127,14 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public Subtask removeSubtask(int id) {
-        Subtask t = subtasks.remove(id);
-        if (t != null) {
-            Epic epic = t.getEpic();
+        Subtask task = subtasks.remove(id);
+        if (task != null) {
+            Epic epic = task.getEpic();
             if (epic != null) {
                 epic.status = calcEpicStatus(epic.getId());
             }
         }
-        return t;
+        return task;
     }
 
     //endregion
@@ -139,14 +147,14 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public Collection<Subtask> fetchEpicSubtasks(int epicId) {
-        ArrayList<Subtask> tasks = new ArrayList<>();
-        for (Subtask t : subtasks.values()) {
-            if (t.getEpicId() == epicId)
-                tasks.add(t);
+    public List<Subtask> fetchEpicSubtasks(int epicId) {
+        List<Subtask> epicTasks = new ArrayList<>();
+        for (Subtask task : subtasks.values()) {
+            if (task.getEpicId() == epicId)
+                epicTasks.add(task);
         }
 
-        return tasks;
+        return epicTasks;
     }
 
     @Override
@@ -157,10 +165,10 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public Epic findEpic(int id) {
-        Epic t = epics.get(id);
-        if (t != null)
-            history.add(new Epic(t));
-        return t;
+        Epic task = epics.get(id);
+        if (task != null)
+            history.add(new Epic(task));
+        return task;
     }
 
     @Override
@@ -178,13 +186,13 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public Epic removeEpic(int id) {
-        Epic ep = epics.remove(id);
-        if (ep != null) {
-            for (Subtask t : fetchEpicSubtasks(id)) {
-                subtasks.remove(t.getId());
+        Epic epic = epics.remove(id);
+        if (epic != null) {
+            for (Subtask task : fetchEpicSubtasks(id)) {
+                subtasks.remove(task.getId());
             }
         }
-        return ep;
+        return epic;
     }
 
     //endregion

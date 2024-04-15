@@ -1,6 +1,7 @@
 package tasks;
 
-import java.util.*;
+import java.util.LinkedList;
+import java.util.List;
 
 public class InMemoryHistoryManager implements HistoryManager {
     private static final int MAX_HISTORY_SIZE = 10;
