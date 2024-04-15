@@ -1,5 +1,7 @@
 package tasks;
 
+import services.HistoryManager;
+
 import java.util.LinkedList;
 import java.util.List;
 
