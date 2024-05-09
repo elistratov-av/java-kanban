@@ -5,6 +5,7 @@ import services.HistoryManager;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class InMemoryHistoryManager implements HistoryManager {
 
@@ -20,7 +21,7 @@ public class InMemoryHistoryManager implements HistoryManager {
         }
     }
 
-    private final HashMap<Integer, Node<Task>> map = new HashMap<>();
+    private final Map<Integer, Node<Task>> map = new HashMap<>();
     private Node<Task> head;
     private Node<Task> tail;
     private int size = 0;
@@ -29,10 +30,12 @@ public class InMemoryHistoryManager implements HistoryManager {
         final Node<Task> oldTail = tail;
         final Node<Task> newNode = new Node<>(oldTail, task, null);
         tail = newNode;
-        if (oldTail == null)
+        if (oldTail == null) {
             head = newNode;
-        else
+        }
+        else {
             oldTail.next = newNode;
+        }
         ++size;
     }
 
