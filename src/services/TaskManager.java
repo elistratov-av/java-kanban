@@ -36,7 +36,7 @@ public interface TaskManager {
 
     Collection<Epic> fetchEpics();
 
-    List<Subtask> fetchEpicSubtasks(int id);
+    Collection<Subtask> fetchEpicSubtasks(int id);
 
     void clearEpics();
 

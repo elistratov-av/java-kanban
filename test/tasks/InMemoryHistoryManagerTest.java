@@ -26,8 +26,40 @@ class InMemoryHistoryManagerTest {
         List<Task> history = taskManager.getHistory();
 
         Assertions.assertNotNull(history);
+        Assertions.assertEquals(1, history.size());
+        Assertions.assertEquals("Task2", history.getFirst().getName());
+    }
+
+    @Test
+    void shouldRemoveOldTask() {
+        Task task1 = taskManager.create(new Task("Task1"));
+        Task task2 = taskManager.create(new Task("Task2"));
+        taskManager.findTask(task1.getId());
+        taskManager.findTask(task2.getId());
+        List<Task> history = taskManager.getHistory();
+
+        Assertions.assertNotNull(history);
         Assertions.assertEquals(2, history.size());
-        Assertions.assertEquals("Task1", history.get(0).getName());
-        Assertions.assertEquals("Task2", history.get(1).getName());
+        taskManager.removeTask(task2.getId());
+        history = taskManager.getHistory();
+        Assertions.assertEquals(1, history.size());
+        Assertions.assertEquals("Task1", history.getFirst().getName());
+    }
+
+    @Test
+    void shouldBeEmpty() {
+        Epic epic = taskManager.create(new Epic("Epic1"));
+        Subtask subtask1 = taskManager.create(new Subtask("Subtask1", epic));
+        Subtask subtask2 = taskManager.create(new Subtask("Subtask2", epic));
+        taskManager.findEpic(epic.getId());
+        taskManager.findSubtask(subtask1.getId());
+        taskManager.findSubtask(subtask2.getId());
+        List<Task> history = taskManager.getHistory();
+
+        Assertions.assertNotNull(history);
+        Assertions.assertEquals(3, history.size());
+        taskManager.removeEpic(epic.getId());
+        history = taskManager.getHistory();
+        Assertions.assertTrue(history.isEmpty());
     }
 }
