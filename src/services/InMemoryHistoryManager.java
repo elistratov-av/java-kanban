@@ -1,6 +1,6 @@
-package tasks;
+package services;
 
-import services.HistoryManager;
+import tasks.Task;
 
 import java.util.ArrayList;
 import java.util.HashMap;

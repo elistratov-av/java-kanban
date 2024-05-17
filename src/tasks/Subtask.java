@@ -1,24 +1,34 @@
 package tasks;
 
 public class Subtask extends Task {
-    protected Epic epic;
+    protected Integer epicId;
+
+    public Subtask() {
+        super();
+    }
 
     public Subtask(String name, Epic epic) {
         super(name);
-        this.epic = epic;
+        if (epic != null)
+            epicId = epic.getId();
     }
 
     public Subtask(Subtask task) {
         super(task);
-        this.epic = task.epic;
+        epicId = task.epicId;
     }
 
-    public Epic getEpic() {
-        return epic;
+    @Override
+    public TaskType getType() {
+        return TaskType.SUBTASK;
     }
 
     public Integer getEpicId() {
-        return epic != null ? epic.getId() : null;
+        return epicId;
+    }
+
+    public void setEpicId(Integer epicId) {
+        this.epicId = epicId;
     }
 
     @Override
@@ -27,9 +37,9 @@ public class Subtask extends Task {
         return "tasks.Subtask{" +
                 "id=" + getId() +
                 ", name='" + getName() + '\'' +
-                ", description.length='" + (description == null ? 0 : description.length()) + '\'' +
                 ", status=" + status +
                 ", epicId=" + getEpicId() +
+                ", description.length='" + (description == null ? 0 : description.length()) + '\'' +
                 '}';
     }
 }
