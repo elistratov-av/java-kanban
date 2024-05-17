@@ -28,8 +28,12 @@ public class Task {
         return id;
     }
 
-    protected void setId(int id) {
+    public void setId(int id) {
         this.id = id;
+    }
+
+    public TaskType getType() {
+        return TaskType.TASK;
     }
 
     public String getName() {
@@ -73,8 +77,8 @@ public class Task {
         return "tasks.Task{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", description.length='" + (description == null ? 0 : description.length()) + '\'' +
                 ", status=" + status +
+                ", description.length='" + (description == null ? 0 : description.length()) + '\'' +
                 '}';
     }
 }
