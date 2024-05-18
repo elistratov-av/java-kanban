@@ -75,6 +75,8 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     }
 
     private void loadTask(Task task) {
+        if (task == null) return;
+
         switch (task.getType()) {
             case TASK:
                 tasks.put(task.getId(), task);
@@ -85,6 +87,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
             case SUBTASK:
                 subtasks.put(task.getId(), (Subtask) task);
                 break;
+            default: throw new IllegalStateException("Unexpected value: " + task.getType());
         }
         resetIdIfGreater(task.getId());
     }

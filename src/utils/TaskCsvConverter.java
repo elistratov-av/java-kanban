@@ -34,8 +34,8 @@ public class TaskCsvConverter {
     public static Task fromString(String value) {
         if (value == null || value.isBlank()) return null;
 
-        String[] tokens = value.split(",");
-        if (tokens.length < 2 || "id".equals(tokens[0])) return null;
+        String[] tokens = value.split(",", 7);
+        if (tokens.length < 5 || "id".equals(tokens[0])) return null;
 
         TaskType taskType = TaskType.valueOf(tokens[1]);
         switch (taskType) {
@@ -48,23 +48,16 @@ public class TaskCsvConverter {
 
     private static Task fromCsv(Task task, String[] tokens) {
         task.setId(Integer.parseInt(tokens[0]));
-        if (tokens.length > 2) {
-            task.setName(tokens[2]);
-            if (tokens.length > 3) {
-                task.setStatus(TaskStatus.valueOf(tokens[3]));
-                if (tokens.length > 4) {
-                    task.setDescription(tokens[4]);
-                }
-            }
-        }
+        task.setName(tokens[2]);
+        task.setStatus(TaskStatus.valueOf(tokens[3]));
+        task.setDescription(tokens[4]);
         return task;
     }
 
     private static Task fromCsv(Subtask subtask, String[] tokens) {
         fromCsv((Task)subtask, tokens);
-        if (tokens.length > 5) {
+        if (tokens.length > 5)
             subtask.setEpicId(Integer.parseInt(tokens[5]));
-        }
         return subtask;
     }
 }
