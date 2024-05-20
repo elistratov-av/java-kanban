@@ -1,6 +1,10 @@
 package tasks;
 
 public class Epic extends Task {
+    public Epic() {
+        super();
+    }
+
     public Epic(String name) {
         super(name);
     }
@@ -10,8 +14,8 @@ public class Epic extends Task {
     }
 
     @Override
-    public void setStatus(TaskStatus status) {
-        // Статус эпика расчетная величина, поэтому блокирую его смену через открытый метод
+    public TaskType getType() {
+        return TaskType.EPIC;
     }
 
     @Override
@@ -20,8 +24,8 @@ public class Epic extends Task {
         return "tasks.Epic{" +
                 "id=" + getId() +
                 ", name='" + getName() + '\'' +
-                ", description.length='" + (description == null ? 0 : description.length()) + '\'' +
                 ", status=" + status +
+                ", description.length='" + (description == null ? 0 : description.length()) + '\'' +
                 '}';
     }
 }

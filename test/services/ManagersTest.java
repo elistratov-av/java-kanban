@@ -1,8 +1,7 @@
-package tasks;
+package services;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import services.Managers;
 
 class ManagersTest {
 

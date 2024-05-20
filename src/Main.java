@@ -1,68 +1,59 @@
+import services.FileBackedTaskManager;
 import services.Managers;
 import services.TaskManager;
-import tasks.*;
+import tasks.Epic;
+import tasks.Subtask;
+import tasks.Task;
+import tasks.TaskStatus;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 
 public class Main {
 
-    public static void main(String[] args) {
-        TaskManager taskManager = Managers.getDefault();
+    public static void main(String[] args) throws IOException {
+        File trackerFile = Files.createTempFile("tracker", ".csv").toFile();
+        System.out.println("trackerFile: " + trackerFile.getPath());
+        TaskManager taskManager = new FileBackedTaskManager(Managers.getDefaultHistory(), trackerFile);
 
-        int task1Id = taskManager.create(new Task("Task1")).getId();
-        int task2Id = taskManager.create(new Task("Task2")).getId();
-        Epic epic = taskManager.create(new Epic("Epic1"));
-        int epic1Id = epic.getId();
-        int subtask1Id = taskManager.create(new Subtask("Subtask1", epic)).getId();
-        int subtask2Id = taskManager.create(new Subtask("Subtask2", epic)).getId();
-        int subtask3Id = taskManager.create(new Subtask("Subtask3", epic)).getId();
-        epic = taskManager.create(new Epic("Epic2"));
-        int epic2Id = epic.getId();
+        Task task1 = taskManager.create(new Task("Task1"));
+        Task task2 = taskManager.create(new Task("Task2"));
+        task2.setStatus(TaskStatus.IN_PROGRESS);
+        Epic epic1 = taskManager.create(new Epic("Epic1"));
+        Subtask subtask1 = taskManager.create(new Subtask("Subtask1", epic1));
+        subtask1.setStatus(TaskStatus.IN_PROGRESS);
+        Subtask subtask2 = taskManager.create(new Subtask("Subtask2", epic1));
+        Subtask subtask3 = taskManager.create(new Subtask("Subtask3", epic1));
+        subtask3.setStatus(TaskStatus.DONE);
+        Epic epic2 = taskManager.create(new Epic("Epic2"));
 
-        printAllTasks(taskManager);
+        System.out.println("Список задач первого трекера задач:");
+        List<Task> allTasks1 = getAllTasks(taskManager);
+        printTasks(allTasks1);
         System.out.println();
-        System.out.println("Выполняем пользовательский сценарий");
-
-        checkTask(taskManager, task1Id);
-        checkTask(taskManager, task2Id);
-        checkEpic(taskManager, epic1Id);
-        checkSubtask(taskManager, subtask1Id);
-        checkTask(taskManager, task1Id);
-        checkSubtask(taskManager, subtask2Id);
-        checkEpic(taskManager, epic2Id);
-        checkSubtask(taskManager, subtask3Id);
-        checkEpic(taskManager, epic1Id);
-        checkTask(taskManager, task1Id);
-
-        taskManager.removeTask(task1Id);
-        System.out.println("Удалили задачу по id: " + task1Id);
-        printHistory(taskManager);
-
-        taskManager.removeEpic(epic1Id);
-        System.out.println("Удалили эпик по id: " + epic1Id);
-        printHistory(taskManager);
-
-        System.out.println("Завершили пользовательский сценарий");
+        TaskManager taskManager2 = FileBackedTaskManager.loadFromFile(trackerFile);
+        System.out.println("Список задач второго трекера задач:");
+        List<Task> allTasks2 = getAllTasks(taskManager2);
+        printTasks(allTasks2);
         System.out.println();
-        printAllTasks(taskManager);
+
+        Task[] tasks1 = allTasks1.toArray(new Task[0]);
+        Task[] tasks2 = allTasks2.toArray(new Task[0]);
+        System.out.println("Списки задач обоих трекеров совпадают: " + Arrays.equals(tasks1, tasks2));
     }
 
-    private static void checkTask(TaskManager taskManager, int id) {
-        taskManager.findTask(id);
-        System.out.println("Обращение к задаче по id: " + id);
-        printHistory(taskManager);
-    }
+    private static List<Task> getAllTasks(TaskManager taskManager) {
+        List<Task> tasks = new ArrayList<>();
+        tasks.addAll(taskManager.fetchTasks());
+        tasks.addAll(taskManager.fetchEpics());
+        tasks.addAll(taskManager.fetchSubtasks());
 
-    private static void checkSubtask(TaskManager taskManager, int id) {
-        taskManager.findSubtask(id);
-        System.out.println("Обращение к подзадаче по id: " + id);
-        printHistory(taskManager);
-    }
-
-    private static void checkEpic(TaskManager taskManager, int id) {
-        taskManager.findEpic(id);
-        System.out.println("Обращение к эпику по id: " + id);
-        printHistory(taskManager);
+        return tasks;
     }
 
     private static void printTasks(Collection<? extends Task> tasks) {

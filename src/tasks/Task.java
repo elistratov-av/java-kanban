@@ -1,5 +1,7 @@
 package tasks;
 
+import utils.StringUtils;
+
 import java.util.Objects;
 
 public class Task {
@@ -28,8 +30,12 @@ public class Task {
         return id;
     }
 
-    protected void setId(int id) {
+    public void setId(int id) {
         this.id = id;
+    }
+
+    public TaskType getType() {
+        return TaskType.TASK;
     }
 
     public String getName() {
@@ -60,12 +66,14 @@ public class Task {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Task task)) return false;
-        return id == task.id;
+        if (getClass() != task.getClass()) return false;
+        return id == task.id && StringUtils.equals(name, task.name, true) &&
+                StringUtils.equals(description, task.description, true) && status == task.status;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id);
+        return Objects.hash(id, name, description, status);
     }
 
     @Override
@@ -73,8 +81,8 @@ public class Task {
         return "tasks.Task{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", description.length='" + (description == null ? 0 : description.length()) + '\'' +
                 ", status=" + status +
+                ", description.length='" + (description == null ? 0 : description.length()) + '\'' +
                 '}';
     }
 }
