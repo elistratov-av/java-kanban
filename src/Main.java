@@ -5,7 +5,6 @@ import tasks.Epic;
 import tasks.Subtask;
 import tasks.Task;
 import tasks.TaskStatus;
-import utils.TaskComparator;
 
 import java.io.File;
 import java.io.IOException;
@@ -45,7 +44,7 @@ public class Main {
 
         Task[] tasks1 = allTasks1.toArray(new Task[0]);
         Task[] tasks2 = allTasks2.toArray(new Task[0]);
-        System.out.println("Списки задач обоих трекеров совпадают: " + Arrays.equals(tasks1, tasks2, new TaskComparator()));
+        System.out.println("Списки задач обоих трекеров совпадают: " + Arrays.equals(tasks1, tasks2));
     }
 
     private static List<Task> getAllTasks(TaskManager taskManager) {

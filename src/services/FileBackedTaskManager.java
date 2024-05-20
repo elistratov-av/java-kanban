@@ -75,7 +75,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     }
 
     private void loadTask(Task task) {
-        if (task == null) return;
+        if (task == null) throw new IllegalArgumentException("Не задан обязательный параметр task");
 
         switch (task.getType()) {
             case TASK:

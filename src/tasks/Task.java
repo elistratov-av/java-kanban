@@ -1,5 +1,7 @@
 package tasks;
 
+import utils.StringUtils;
+
 import java.util.Objects;
 
 public class Task {
@@ -64,12 +66,14 @@ public class Task {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Task task)) return false;
-        return id == task.id;
+        if (getClass() != task.getClass()) return false;
+        return id == task.id && StringUtils.equals(name, task.name, true) &&
+                StringUtils.equals(description, task.description, true) && status == task.status;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id);
+        return Objects.hash(id, name, description, status);
     }
 
     @Override
