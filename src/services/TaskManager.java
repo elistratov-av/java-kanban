@@ -6,15 +6,18 @@ import tasks.Task;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 public interface TaskManager {
     List<Task> getHistory();
+
+    List<Task> getPrioritizedTasks();
 
     Collection<Task> fetchTasks();
 
     void clearTasks();
 
-    Task findTask(int id);
+    Optional<Task> findTask(int id);
 
     Task create(Task task);
 
@@ -26,7 +29,7 @@ public interface TaskManager {
 
     void clearSubtasks();
 
-    Subtask findSubtask(int id);
+    Optional<Subtask> findSubtask(int id);
 
     Subtask create(Subtask task);
 
@@ -40,7 +43,7 @@ public interface TaskManager {
 
     void clearEpics();
 
-    Epic findEpic(int id);
+    Optional<Epic> findEpic(int id);
 
     Epic create(Epic task);
 

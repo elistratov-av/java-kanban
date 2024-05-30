@@ -1,6 +1,7 @@
 package tasks;
 
-import java.util.Objects;
+import java.time.Duration;
+import java.time.LocalDateTime;
 
 public class Subtask extends Task {
     protected Integer epicId;
@@ -9,8 +10,14 @@ public class Subtask extends Task {
         super();
     }
 
-    public Subtask(String name, Epic epic) {
-        super(name);
+    public Subtask(String name, LocalDateTime startTime, Duration duration, Epic epic) {
+        super(name, startTime, duration);
+        if (epic != null)
+            epicId = epic.getId();
+    }
+
+    public Subtask(String name, TaskStatus status, LocalDateTime startTime, Duration duration, Epic epic) {
+        super(name, status, startTime, duration);
         if (epic != null)
             epicId = epic.getId();
     }
@@ -21,29 +28,22 @@ public class Subtask extends Task {
     }
 
     @Override
+    public Subtask clone() {
+        return new Subtask(this);
+    }
+
+    @Override
     public TaskType getType() {
         return TaskType.SUBTASK;
     }
 
+    @Override
     public Integer getEpicId() {
         return epicId;
     }
 
     public void setEpicId(Integer epicId) {
         this.epicId = epicId;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Subtask subtask)) return false;
-        if (!super.equals(o)) return false;
-        return Objects.equals(epicId, subtask.epicId);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(super.hashCode(), epicId);
     }
 
     @Override
@@ -54,6 +54,8 @@ public class Subtask extends Task {
                 ", name='" + getName() + '\'' +
                 ", status=" + status +
                 ", epicId=" + getEpicId() +
+                ", startTime=" + startTime +
+                ", duration=" + duration +
                 ", description.length='" + (description == null ? 0 : description.length()) + '\'' +
                 '}';
     }

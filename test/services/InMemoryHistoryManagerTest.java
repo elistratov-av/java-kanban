@@ -7,6 +7,8 @@ import tasks.Epic;
 import tasks.Subtask;
 import tasks.Task;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.List;
 
 class InMemoryHistoryManagerTest {
@@ -19,8 +21,8 @@ class InMemoryHistoryManagerTest {
 
     @Test
     void testHistory() {
-        Task task = taskManager.create(new Task("Task1"));
-        Task foundTask = taskManager.findTask(task.getId());
+        Task task = taskManager.create(new Task("Task1", LocalDateTime.now(), Duration.ofMinutes(1)));
+        Task foundTask = taskManager.findTask(task.getId()).orElseThrow();
         foundTask.setName("Task2");
         taskManager.update(foundTask);
         taskManager.findTask(task.getId());
@@ -33,16 +35,18 @@ class InMemoryHistoryManagerTest {
 
     @Test
     void shouldRemoveOldTask() {
-        Task task1 = taskManager.create(new Task("Task1"));
-        Task task2 = taskManager.create(new Task("Task2"));
+        Task task1 = taskManager.create(new Task("Task1", LocalDateTime.now(), Duration.ofMinutes(1)));
+        Task task2 = taskManager.create(new Task("Task2", LocalDateTime.now(), Duration.ofMinutes(1)));
         taskManager.findTask(task1.getId());
         taskManager.findTask(task2.getId());
         List<Task> history = taskManager.getHistory();
 
         Assertions.assertNotNull(history);
         Assertions.assertEquals(2, history.size());
+
         taskManager.removeTask(task2.getId());
         history = taskManager.getHistory();
+
         Assertions.assertEquals(1, history.size());
         Assertions.assertEquals("Task1", history.getFirst().getName());
     }
@@ -50,8 +54,8 @@ class InMemoryHistoryManagerTest {
     @Test
     void shouldBeEmpty() {
         Epic epic = taskManager.create(new Epic("Epic1"));
-        Subtask subtask1 = taskManager.create(new Subtask("Subtask1", epic));
-        Subtask subtask2 = taskManager.create(new Subtask("Subtask2", epic));
+        Subtask subtask1 = taskManager.create(new Subtask("Subtask1", LocalDateTime.now(), Duration.ofMinutes(1), epic));
+        Subtask subtask2 = taskManager.create(new Subtask("Subtask2", LocalDateTime.now(), Duration.ofMinutes(1), epic));
         taskManager.findEpic(epic.getId());
         taskManager.findSubtask(subtask1.getId());
         taskManager.findSubtask(subtask2.getId());
@@ -59,8 +63,10 @@ class InMemoryHistoryManagerTest {
 
         Assertions.assertNotNull(history);
         Assertions.assertEquals(3, history.size());
+
         taskManager.removeEpic(epic.getId());
         history = taskManager.getHistory();
+
         Assertions.assertTrue(history.isEmpty());
     }
 }

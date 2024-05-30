@@ -1,22 +1,35 @@
 package tasks;
 
-import utils.StringUtils;
-
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
-public class Task {
+public class Task implements Cloneable {
     private int id;
     private String name;
     private String description;
     protected TaskStatus status;
+    protected LocalDateTime startTime;
+    protected Duration duration;
 
     public Task() {
         this.status = TaskStatus.NEW;
+        this.startTime = LocalDateTime.now();
+        this.duration = Duration.ofHours(1);
     }
 
-    public Task(String name) {
+    public Task(String name, LocalDateTime startTime, Duration duration) {
         this.name = name;
         this.status = TaskStatus.NEW;
+        this.startTime = startTime;
+        this.duration = duration;
+    }
+
+    public Task(String name, TaskStatus status, LocalDateTime startTime, Duration duration) {
+        this.name = name;
+        this.status = status;
+        this.startTime = startTime;
+        this.duration = duration;
     }
 
     public Task(Task task) {
@@ -24,6 +37,13 @@ public class Task {
         this.name = task.name;
         this.description = task.description;
         this.status = task.status;
+        this.startTime = task.startTime;
+        this.duration = task.duration;
+    }
+
+    @Override
+    public Task clone() {
+        return new Task(this);
     }
 
     public int getId() {
@@ -62,18 +82,43 @@ public class Task {
         this.status = status;
     }
 
+    public Duration getDuration() {
+        return duration;
+    }
+
+    public void setDuration(Duration duration) {
+        this.duration = duration;
+    }
+
+    public LocalDateTime getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(LocalDateTime startTime) {
+        this.startTime = startTime;
+    }
+
+    public LocalDateTime getEndTime() {
+        if (startTime == null || duration == null)
+            return null;
+        return startTime.plus(duration);
+    }
+
+    public Integer getEpicId() {
+        return null;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Task task)) return false;
         if (getClass() != task.getClass()) return false;
-        return id == task.id && StringUtils.equals(name, task.name, true) &&
-                StringUtils.equals(description, task.description, true) && status == task.status;
+        return id == task.id;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, description, status);
+        return Objects.hash(id);
     }
 
     @Override
@@ -82,6 +127,8 @@ public class Task {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", status=" + status +
+                ", startTime=" + startTime +
+                ", duration=" + duration +
                 ", description.length='" + (description == null ? 0 : description.length()) + '\'' +
                 '}';
     }
