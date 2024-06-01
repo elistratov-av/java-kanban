@@ -6,16 +6,19 @@ import org.junit.jupiter.api.Test;
 import tasks.Epic;
 import tasks.Subtask;
 import tasks.Task;
+import utils.ManagerSaveException;
+import utils.TaskCsvConverter;
 
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.time.Duration;
+import java.time.LocalDateTime;
 
-class FileBackedTaskManagerTest {
+class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskManager> {
     private File trackerFile;
-    private TaskManager taskManager;
 
     @BeforeEach
     public void beforeEach() throws IOException {
@@ -26,6 +29,7 @@ class FileBackedTaskManagerTest {
     @Test
     void loadFromEmptyFile() {
         TaskManager taskManager1 = FileBackedTaskManager.loadFromFile(trackerFile);
+
         Assertions.assertTrue(taskManager1.fetchTasks().isEmpty(), "Кол-во задач ожидалось равным 1");
         Assertions.assertTrue(taskManager1.fetchEpics().isEmpty(), "Кол-во эпиков ожидалось равным 1");
         Assertions.assertTrue(taskManager1.fetchSubtasks().isEmpty(), "Кол-во подзадач ожидалось равным 1");
@@ -33,11 +37,11 @@ class FileBackedTaskManagerTest {
 
     @Test
     void loadSavedFromFile() {
-        taskManager.create(new Task("Task1"));
+        taskManager.create(new Task("Task1", LocalDateTime.now(), Duration.ofMinutes(1)));
         Epic epic = taskManager.create(new Epic("Epic1"));
-        taskManager.create(new Subtask("Subtask1", epic));
-
+        taskManager.create(new Subtask("Subtask1", LocalDateTime.now(), Duration.ofMinutes(1), epic));
         TaskManager taskManager1 = FileBackedTaskManager.loadFromFile(trackerFile);
+
         Assertions.assertEquals(1, taskManager1.fetchTasks().size(), "Кол-во задач ожидалось равным 1");
         Assertions.assertEquals(1, taskManager1.fetchEpics().size(), "Кол-во эпиков ожидалось равным 1");
         Assertions.assertEquals(1, taskManager1.fetchSubtasks().size(), "Кол-во подзадач ожидалось равным 1");
@@ -45,20 +49,26 @@ class FileBackedTaskManagerTest {
 
     @Test
     void loadFromFile() throws IOException {
+        LocalDateTime today = LocalDateTime.now();
         try (BufferedWriter wr = Files.newBufferedWriter(trackerFile.toPath(), StandardCharsets.UTF_8)) {
-            wr.write("id,type,name,status,description,epic");
+            wr.write(TaskCsvConverter.CSV_HEADER);
             wr.newLine();
-            wr.write("1,TASK,Task1,NEW,,");
+            wr.write("1,TASK,Task1,NEW,,," + today + ",1");
             wr.newLine();
-            wr.write("2,EPIC,Epic1,NEW,,");
+            wr.write("2,EPIC,Epic1,NEW,,," + today + ",1");
             wr.newLine();
-            wr.write("3,SUBTASK,Subtask1,NEW,,2");
+            wr.write("3,SUBTASK,Subtask1,NEW,,2," + today + ",1");
             wr.newLine();
         }
-
         TaskManager taskManager1 = FileBackedTaskManager.loadFromFile(trackerFile);
+
         Assertions.assertEquals(1, taskManager1.fetchTasks().size(), "Кол-во задач ожидалось равным 1");
         Assertions.assertEquals(1, taskManager1.fetchEpics().size(), "Кол-во эпиков ожидалось равным 1");
         Assertions.assertEquals(1, taskManager1.fetchSubtasks().size(), "Кол-во подзадач ожидалось равным 1");
+    }
+
+    @Test
+    void testNotFoundFile() {
+        Assertions.assertThrows(ManagerSaveException.class, () -> FileBackedTaskManager.loadFromFile(new File("NotFoundFile.csv")));
     }
 }
