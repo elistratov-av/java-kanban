@@ -1,11 +1,11 @@
-import services.FileBackedTaskManager;
-import services.Managers;
-import services.TaskManager;
-import tasks.Epic;
-import tasks.Subtask;
-import tasks.Task;
-import tasks.TaskStatus;
-import utils.StringUtils;
+import model.Epic;
+import model.Subtask;
+import model.Task;
+import model.TaskStatus;
+import service.FileBackedTaskManager;
+import service.Managers;
+import service.TaskManager;
+import util.StringUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -84,7 +84,7 @@ public class Main {
 
         if (task1.getClass() != task2.getClass()) return false;
 
-        return task1.getId() == task2.getId() && StringUtils.equals(task1.getName(), task2.getName(), true) &&
+        return Task.idEquals(task1.getId(), task2.getId()) && StringUtils.equals(task1.getName(), task2.getName(), true) &&
                 StringUtils.equals(task1.getDescription(), task2.getDescription(), true) && task1.getStatus() == task2.getStatus() &&
                 Objects.equals(task1.getStartTime(), task2.getStartTime()) && Objects.equals(task1.getDuration(), task2.getDuration()) &&
                 Objects.equals(task1.getEpicId(), task2.getEpicId());
