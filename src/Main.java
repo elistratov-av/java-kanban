@@ -1,11 +1,11 @@
-import services.FileBackedTaskManager;
-import services.Managers;
-import services.TaskManager;
-import tasks.Epic;
-import tasks.Subtask;
-import tasks.Task;
-import tasks.TaskStatus;
-import utils.StringUtils;
+import model.Epic;
+import model.Subtask;
+import model.Task;
+import model.TaskStatus;
+import service.FileBackedTaskManager;
+import service.Managers;
+import service.TaskManager;
+import util.StringUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -25,16 +25,16 @@ public class Main {
         TaskManager taskManager = new FileBackedTaskManager(Managers.getDefaultHistory(), trackerFile);
 
         LocalDateTime today = LocalDateTime.now();
-        Task task1 = taskManager.create(new Task("Task1", today, Duration.ofMinutes(1)));
+        taskManager.create(new Task("Task1", today, Duration.ofMinutes(1)));
         Task task2 = taskManager.create(new Task("Task2", today, Duration.ofMinutes(1)));
         task2.setStatus(TaskStatus.IN_PROGRESS);
         Epic epic1 = taskManager.create(new Epic("Epic1"));
         Subtask subtask1 = taskManager.create(new Subtask("Subtask1", today, Duration.ofMinutes(1), epic1));
         subtask1.setStatus(TaskStatus.IN_PROGRESS);
-        Subtask subtask2 = taskManager.create(new Subtask("Subtask2", today, Duration.ofMinutes(1), epic1));
+        taskManager.create(new Subtask("Subtask2", today, Duration.ofMinutes(1), epic1));
         Subtask subtask3 = taskManager.create(new Subtask("Subtask3", today, Duration.ofMinutes(1), epic1));
         subtask3.setStatus(TaskStatus.DONE);
-        Epic epic2 = taskManager.create(new Epic("Epic2"));
+        taskManager.create(new Epic("Epic2"));
 
         System.out.println("Список задач первого трекера задач:");
         List<Task> allTasks1 = getAllTasks(taskManager);
@@ -51,9 +51,9 @@ public class Main {
 
     private static List<Task> getAllTasks(TaskManager taskManager) {
         List<Task> tasks = new ArrayList<>();
-        tasks.addAll(taskManager.fetchTasks());
-        tasks.addAll(taskManager.fetchEpics());
-        tasks.addAll(taskManager.fetchSubtasks());
+        tasks.addAll(taskManager.getTasks());
+        tasks.addAll(taskManager.getEpics());
+        tasks.addAll(taskManager.getSubtasks());
 
         return tasks;
     }
@@ -84,7 +84,7 @@ public class Main {
 
         if (task1.getClass() != task2.getClass()) return false;
 
-        return task1.getId() == task2.getId() && StringUtils.equals(task1.getName(), task2.getName(), true) &&
+        return Task.idEquals(task1.getId(), task2.getId()) && StringUtils.equals(task1.getName(), task2.getName(), true) &&
                 StringUtils.equals(task1.getDescription(), task2.getDescription(), true) && task1.getStatus() == task2.getStatus() &&
                 Objects.equals(task1.getStartTime(), task2.getStartTime()) && Objects.equals(task1.getDuration(), task2.getDuration()) &&
                 Objects.equals(task1.getEpicId(), task2.getEpicId());
@@ -103,17 +103,17 @@ public class Main {
 
     private static void printAllTasks(TaskManager manager) {
         System.out.println("Задачи:");
-        printTasks(manager.fetchTasks());
+        printTasks(manager.getTasks());
         System.out.println("Эпики:");
-        for (Task epic : manager.fetchEpics()) {
+        for (Task epic : manager.getEpics()) {
             System.out.println(epic);
 
-            for (Task task : manager.fetchEpicSubtasks(epic.getId())) {
+            for (Task task : manager.getEpicSubtasks(epic.getId())) {
                 System.out.println("--> " + task);
             }
         }
         System.out.println("Подзадачи:");
-        printTasks(manager.fetchSubtasks());
+        printTasks(manager.getSubtasks());
 
         printHistory(manager);
     }
