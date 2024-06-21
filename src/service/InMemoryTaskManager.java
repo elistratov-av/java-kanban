@@ -78,7 +78,7 @@ public class InMemoryTaskManager implements TaskManager {
     //region Tasks
 
     @Override
-    public List<Task> fetchTasks() {
+    public List<Task> getTasks() {
         return new ArrayList<>(tasks.values());
     }
 
@@ -131,11 +131,7 @@ public class InMemoryTaskManager implements TaskManager {
     //region Subtasks
 
     @Override
-    public List<Subtask> fetchSubtasks() {
-        // Реализация уже использует интерфейс Collection
-        // чтобы не создавать обертку в виде new ArrayList оставляю этот интерфейс
-        // на самом деле его функционал уже чем у List, но вполне достаточно для пользователей
-        // поскольку требуется только перебор полученной коллекции
+    public List<Subtask> getSubtasks() {
         return new ArrayList<>(subtasks.values());
     }
 
@@ -172,7 +168,7 @@ public class InMemoryTaskManager implements TaskManager {
         task.setId(nextId());
         subtasks.put(task.getId(), task);
         prioritizedTasks.add(task);
-        e.updateState(fetchEpicSubtasks(e.getId()));
+        e.updateState(getEpicSubtasks(e.getId()));
         return task;
     }
 
@@ -187,7 +183,7 @@ public class InMemoryTaskManager implements TaskManager {
         removePriorityTask(oldTask);
         subtasks.put(task.getId(), task);
         prioritizedTasks.add(task);
-        e.updateState(fetchEpicSubtasks(e.getId()));
+        e.updateState(getEpicSubtasks(e.getId()));
     }
 
     @Override
@@ -200,7 +196,7 @@ public class InMemoryTaskManager implements TaskManager {
             Optional<Epic> epic = Optional.empty();
             if (epicId != null)
                 epic = findEpic(epicId);
-            epic.ifPresent(e -> e.updateState(fetchEpicSubtasks(e.getId())));
+            epic.ifPresent(e -> e.updateState(getEpicSubtasks(e.getId())));
         }
         return task;
     }
@@ -210,12 +206,12 @@ public class InMemoryTaskManager implements TaskManager {
     //region Epics
 
     @Override
-    public List<Epic> fetchEpics() {
+    public List<Epic> getEpics() {
         return new ArrayList<>(epics.values());
     }
 
     @Override
-    public List<Subtask> fetchEpicSubtasks(int epicId) {
+    public List<Subtask> getEpicSubtasks(int epicId) {
         return subtasks.values().stream()
                 .filter(t -> t.getEpicId() == epicId)
                 .collect(Collectors.toList());
@@ -256,7 +252,7 @@ public class InMemoryTaskManager implements TaskManager {
         history.remove(id);
         Epic epic = epics.remove(id);
         if (epic != null) {
-            for (Subtask task : fetchEpicSubtasks(id)) {
+            for (Subtask task : getEpicSubtasks(id)) {
                 history.remove(task.getId());
                 removePriorityTask(task);
                 subtasks.remove(task.getId());

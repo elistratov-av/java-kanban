@@ -29,7 +29,7 @@ public class EpicHandler extends BaseHttpHandler {
         switch (requestMethod) {
             case "GET":
                 if (EPICS_PATTERN.matcher(path).matches()) {
-                    fetchEpics(httpExchange);
+                    getEpics(httpExchange);
                     return true;
                 } else if (EPICS_ID_PATTERN.matcher(path).matches()) {
                     String pathId = path.substring("/epics/".length());
@@ -38,7 +38,7 @@ public class EpicHandler extends BaseHttpHandler {
                 } else if (EPIC_SUBTASKS_PATTERN.matcher(path).matches()) {
                     String pathId = path.substring("/epics/".length())
                             .replace("/subtasks", "");
-                    fetchEpicSubtasks(httpExchange, parseInt(pathId));
+                    getEpicSubtasks(httpExchange, parseInt(pathId));
                     return true;
                 }
                 break;
@@ -71,8 +71,8 @@ public class EpicHandler extends BaseHttpHandler {
         }
     }
 
-    private void fetchEpics(HttpExchange httpExchange) throws IOException {
-        Collection<Epic> epics = taskManager.fetchEpics();
+    private void getEpics(HttpExchange httpExchange) throws IOException {
+        Collection<Epic> epics = taskManager.getEpics();
         sendJson(httpExchange, 200, gson.toJson(epics));
     }
 
@@ -82,8 +82,8 @@ public class EpicHandler extends BaseHttpHandler {
         sendJson(httpExchange, 200, gson.toJson(epic));
     }
 
-    private void fetchEpicSubtasks(HttpExchange httpExchange, int id) throws IOException {
-        Collection<Subtask> subtasks = taskManager.fetchEpicSubtasks(id);
+    private void getEpicSubtasks(HttpExchange httpExchange, int id) throws IOException {
+        Collection<Subtask> subtasks = taskManager.getEpicSubtasks(id);
         sendJson(httpExchange, 200, gson.toJson(subtasks));
     }
 

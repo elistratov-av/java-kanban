@@ -30,15 +30,15 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
             wr.write(TaskCsvConverter.CSV_HEADER);
             wr.newLine();
 
-            for (Task task : fetchTasks()) {
+            for (Task task : getTasks()) {
                 writeTask(wr, task);
             }
 
-            for (Epic epic : fetchEpics()) {
+            for (Epic epic : getEpics()) {
                 writeTask(wr, epic);
             }
 
-            for (Subtask subtask : fetchSubtasks()) {
+            for (Subtask subtask : getSubtasks()) {
                 writeTask(wr, subtask);
             }
         } catch (IOException e) {
@@ -76,7 +76,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         }
 
         for (Epic epic : epics.values())
-            epic.updateEndTime(fetchEpicSubtasks(epic.getId()));
+            epic.updateEndTime(getEpicSubtasks(epic.getId()));
     }
 
     private void loadTask(Task task) {

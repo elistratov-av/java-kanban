@@ -42,8 +42,8 @@ class TaskHandlerTest {
     }
 
     @Test
-    public void testFetchTasks() throws IOException, InterruptedException {
-        Task task = manager.create(new Task("Test",
+    public void testGetTasks() throws IOException, InterruptedException {
+        manager.create(new Task("Test",
                 TaskStatus.NEW, LocalDateTime.now(), Duration.ofMinutes(5)));
 
         // создаём HTTP-клиент и запрос
@@ -99,7 +99,7 @@ class TaskHandlerTest {
             assertEquals(201, response.statusCode());
 
             // проверяем, что создалась одна задача с корректным именем
-            List<Task> expectedTasks = manager.fetchTasks();
+            List<Task> expectedTasks = manager.getTasks();
             assertNotNull(expectedTasks, "Задачи не возвращаются");
             assertEquals(1, expectedTasks.size(), "Некорректное количество задач");
             assertEquals(task.getName(), expectedTasks.getFirst().getName(), "Некорректное имя задачи");
@@ -142,7 +142,7 @@ class TaskHandlerTest {
             // проверяем код ответа
             assertEquals(204, response.statusCode());
 
-            List<Task> expectedTasks = manager.fetchTasks();
+            List<Task> expectedTasks = manager.getTasks();
             assertEquals(0, expectedTasks.size(), "Задача не удалилась");
         }
     }

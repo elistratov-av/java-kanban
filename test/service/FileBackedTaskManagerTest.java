@@ -30,9 +30,9 @@ class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskManager> {
     void loadFromEmptyFile() {
         TaskManager taskManager1 = FileBackedTaskManager.loadFromFile(trackerFile);
 
-        Assertions.assertTrue(taskManager1.fetchTasks().isEmpty(), "Кол-во задач ожидалось равным 1");
-        Assertions.assertTrue(taskManager1.fetchEpics().isEmpty(), "Кол-во эпиков ожидалось равным 1");
-        Assertions.assertTrue(taskManager1.fetchSubtasks().isEmpty(), "Кол-во подзадач ожидалось равным 1");
+        Assertions.assertTrue(taskManager1.getTasks().isEmpty(), "Кол-во задач ожидалось равным 1");
+        Assertions.assertTrue(taskManager1.getEpics().isEmpty(), "Кол-во эпиков ожидалось равным 1");
+        Assertions.assertTrue(taskManager1.getSubtasks().isEmpty(), "Кол-во подзадач ожидалось равным 1");
     }
 
     @Test
@@ -42,9 +42,9 @@ class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskManager> {
         taskManager.create(new Subtask("Subtask1", LocalDateTime.now().plusHours(1), Duration.ofMinutes(1), epic));
         TaskManager taskManager1 = FileBackedTaskManager.loadFromFile(trackerFile);
 
-        Assertions.assertEquals(1, taskManager1.fetchTasks().size(), "Кол-во задач ожидалось равным 1");
-        Assertions.assertEquals(1, taskManager1.fetchEpics().size(), "Кол-во эпиков ожидалось равным 1");
-        Assertions.assertEquals(1, taskManager1.fetchSubtasks().size(), "Кол-во подзадач ожидалось равным 1");
+        Assertions.assertEquals(1, taskManager1.getTasks().size(), "Кол-во задач ожидалось равным 1");
+        Assertions.assertEquals(1, taskManager1.getEpics().size(), "Кол-во эпиков ожидалось равным 1");
+        Assertions.assertEquals(1, taskManager1.getSubtasks().size(), "Кол-во подзадач ожидалось равным 1");
     }
 
     @Test
@@ -62,9 +62,9 @@ class FileBackedTaskManagerTest extends TaskManagerTest<FileBackedTaskManager> {
         }
         TaskManager taskManager1 = FileBackedTaskManager.loadFromFile(trackerFile);
 
-        Assertions.assertEquals(1, taskManager1.fetchTasks().size(), "Кол-во задач ожидалось равным 1");
-        Assertions.assertEquals(1, taskManager1.fetchEpics().size(), "Кол-во эпиков ожидалось равным 1");
-        Assertions.assertEquals(1, taskManager1.fetchSubtasks().size(), "Кол-во подзадач ожидалось равным 1");
+        Assertions.assertEquals(1, taskManager1.getTasks().size(), "Кол-во задач ожидалось равным 1");
+        Assertions.assertEquals(1, taskManager1.getEpics().size(), "Кол-во эпиков ожидалось равным 1");
+        Assertions.assertEquals(1, taskManager1.getSubtasks().size(), "Кол-во подзадач ожидалось равным 1");
     }
 
     @Test

@@ -44,9 +44,9 @@ class SubtaskHandlerTest {
     }
 
     @Test
-    public void testFetchSubtasks() throws IOException, InterruptedException {
+    public void testGetSubtasks() throws IOException, InterruptedException {
         Epic epic = manager.create(new Epic("Epic"));
-        Subtask subtask = manager.create(new Subtask("Test",
+        manager.create(new Subtask("Test",
                 TaskStatus.NEW, LocalDateTime.now(), Duration.ofMinutes(5), epic));
 
         // создаём HTTP-клиент и запрос
@@ -104,7 +104,7 @@ class SubtaskHandlerTest {
             assertEquals(201, response.statusCode());
 
             // проверяем, что создалась одна задача с корректным именем
-            List<Subtask> expectedSubtasks = manager.fetchSubtasks();
+            List<Subtask> expectedSubtasks = manager.getSubtasks();
             assertNotNull(expectedSubtasks, "Подзадачи не возвращаются");
             assertEquals(1, expectedSubtasks.size(), "Некорректное количество подзадач");
             assertEquals(subtask.getName(), expectedSubtasks.getFirst().getName(), "Некорректное имя подзадачи");
@@ -149,7 +149,7 @@ class SubtaskHandlerTest {
             // проверяем код ответа
             assertEquals(204, response.statusCode());
 
-            List<Task> expectedSubtasks = manager.fetchTasks();
+            List<Task> expectedSubtasks = manager.getTasks();
             assertEquals(0, expectedSubtasks.size(), "Подзадача не удалилась");
         }
     }

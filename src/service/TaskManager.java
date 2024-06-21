@@ -12,7 +12,7 @@ public interface TaskManager {
 
     List<Task> getPrioritizedTasks();
 
-    List<Task> fetchTasks();
+    List<Task> getTasks();
 
     void clearTasks();
 
@@ -24,7 +24,7 @@ public interface TaskManager {
 
     Task removeTask(int id);
 
-    List<Subtask> fetchSubtasks();
+    List<Subtask> getSubtasks();
 
     void clearSubtasks();
 
@@ -36,9 +36,9 @@ public interface TaskManager {
 
     Subtask removeSubtask(int id);
 
-    List<Epic> fetchEpics();
+    List<Epic> getEpics();
 
-    List<Subtask> fetchEpicSubtasks(int id);
+    List<Subtask> getEpicSubtasks(int id);
 
     void clearEpics();
 

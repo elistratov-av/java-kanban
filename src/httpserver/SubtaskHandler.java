@@ -26,7 +26,7 @@ public class SubtaskHandler extends BaseHttpHandler {
         switch (requestMethod) {
             case "GET":
                 if (SUBTASKS_PATTERN.matcher(path).matches()) {
-                    fetchSubtasks(httpExchange);
+                    getSubtasks(httpExchange);
                     return true;
                 } else if (SUBTASKS_ID_PATTERN.matcher(path).matches()) {
                     String pathId = path.substring("/subtasks/".length());
@@ -63,8 +63,8 @@ public class SubtaskHandler extends BaseHttpHandler {
         }
     }
 
-    private void fetchSubtasks(HttpExchange httpExchange) throws IOException {
-        Collection<Subtask> subtasks = taskManager.fetchSubtasks();
+    private void getSubtasks(HttpExchange httpExchange) throws IOException {
+        Collection<Subtask> subtasks = taskManager.getSubtasks();
         sendJson(httpExchange, 200, gson.toJson(subtasks));
     }
 

@@ -26,7 +26,7 @@ public class TaskHandler extends BaseHttpHandler {
         switch (requestMethod) {
             case "GET":
                 if (TASKS_PATTERN.matcher(path).matches()) {
-                    fetchTasks(httpExchange);
+                    getTasks(httpExchange);
                     return true;
                 } else if (TASKS_ID_PATTERN.matcher(path).matches()) {
                     String pathId = path.substring("/tasks/".length());
@@ -63,8 +63,8 @@ public class TaskHandler extends BaseHttpHandler {
         }
     }
 
-    private void fetchTasks(HttpExchange httpExchange) throws IOException {
-        Collection<Task> tasks = taskManager.fetchTasks();
+    private void getTasks(HttpExchange httpExchange) throws IOException {
+        Collection<Task> tasks = taskManager.getTasks();
         sendJson(httpExchange, 200, gson.toJson(tasks));
     }
 

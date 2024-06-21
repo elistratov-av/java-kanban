@@ -14,10 +14,10 @@ public abstract class TaskManagerTest<T extends TaskManager> {
     protected T taskManager;
 
     @Test
-    void fetchTasks() {
+    void getTasks() {
         taskManager.create(new Task("Task1", LocalDateTime.now(), Duration.ofMinutes(1)));
         taskManager.create(new Task("Task2", LocalDateTime.now().plusHours(1), Duration.ofMinutes(1)));
-        Collection<Task> tasks = taskManager.fetchTasks();
+        Collection<Task> tasks = taskManager.getTasks();
 
         Assertions.assertNotNull(tasks);
         Assertions.assertEquals(2, tasks.size());
@@ -27,13 +27,13 @@ public abstract class TaskManagerTest<T extends TaskManager> {
     void clearTasks() {
         taskManager.create(new Task("Task1", LocalDateTime.now(), Duration.ofMinutes(1)));
         taskManager.create(new Task("Task2", LocalDateTime.now().plusHours(1), Duration.ofMinutes(1)));
-        Collection<Task> tasks = taskManager.fetchTasks();
+        Collection<Task> tasks = taskManager.getTasks();
 
         Assertions.assertNotNull(tasks);
         Assertions.assertEquals(2, tasks.size());
 
         taskManager.clearTasks();
-        tasks = taskManager.fetchTasks();
+        tasks = taskManager.getTasks();
 
         Assertions.assertNotNull(tasks);
         Assertions.assertEquals(0, tasks.size());

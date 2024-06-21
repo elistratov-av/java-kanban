@@ -43,8 +43,8 @@ class EpicHandlerTest {
     }
 
     @Test
-    public void testFetchEpics() throws IOException, InterruptedException {
-        Epic epic = manager.create(new Epic("Test"));
+    public void testGetEpics() throws IOException, InterruptedException {
+        manager.create(new Epic("Test"));
 
         // создаём HTTP-клиент и запрос
         try (HttpClient client = HttpClient.newHttpClient()) {
@@ -64,9 +64,9 @@ class EpicHandlerTest {
     }
 
     @Test
-    public void testFetchEpicSubtasks() throws IOException, InterruptedException {
+    public void testGetEpicSubtasks() throws IOException, InterruptedException {
         Epic epic = manager.create(new Epic("Test"));
-        Subtask subtask = manager.create(new Subtask("Test",
+        manager.create(new Subtask("Test",
                 TaskStatus.NEW, LocalDateTime.now(), Duration.ofMinutes(5), epic));
 
         // создаём HTTP-клиент и запрос
@@ -120,7 +120,7 @@ class EpicHandlerTest {
             assertEquals(201, response.statusCode());
 
             // проверяем, что создалась одна задача с корректным именем
-            List<Epic> expectedEpics = manager.fetchEpics();
+            List<Epic> expectedEpics = manager.getEpics();
             assertNotNull(expectedEpics, "Эпики не возвращаются");
             assertEquals(1, expectedEpics.size(), "Некорректное количество эпиков");
             assertEquals(epic.getName(), expectedEpics.getFirst().getName(), "Некорректное имя эпика");
@@ -161,7 +161,7 @@ class EpicHandlerTest {
             // проверяем код ответа
             assertEquals(204, response.statusCode());
 
-            List<Epic> expectedEpics = manager.fetchEpics();
+            List<Epic> expectedEpics = manager.getEpics();
             assertEquals(0, expectedEpics.size(), "Эпик не удалился");
         }
     }
